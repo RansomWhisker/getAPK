@@ -4,7 +4,7 @@
 
 `getapk` talks to your device through `adb`, finds where an app is installed, copies every APK file it consists of, checks each one is a real APK, and writes a single ready-to-analyse file with its SHA-256. It is the Android counterpart of [getIPA](https://github.com/RansomWhisker/getIPA).
 
-> A tool by [**rudranetra.com**](https://rudranetra.com) · more at [rudranetra.com/tools](https://rudranetra.com/tools)
+> A tool by [**rudranetra.com**](https://rudranetra.com) · website: [rudranetra.com/tools/getapk](https://rudranetra.com/tools/getapk/) · more tools at [rudranetra.com/tools](https://rudranetra.com/tools)
 
 ## Why not just `adb pull`?
 
