@@ -210,7 +210,8 @@ def cmd_list(adb: Adb, a) -> int:
 def main(argv: Optional[List[str]] = None):
     argv = list(sys.argv[1:] if argv is None else argv)
     banner.show("getAPK", __version__, "https://github.com/RansomWhisker/getAPK",
-                "pull installed apps from an Android device", suppress=banner.strip_flag(argv))
+                "pull installed apps from an Android device", suppress=banner.strip_flag(argv),
+                website="https://rudranetra.com/tools/getapk/")
     for s in (sys.stdout, sys.stderr):
         try:
             s.reconfigure(encoding="utf-8", errors="replace")
