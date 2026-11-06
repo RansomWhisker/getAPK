@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "getapk"
+version = "1.0.0"
+description = "Pull an installed app from an Android device over adb as an APK (or an APKS bundle for split APKs)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = []
+
+[project.scripts]
+getapk = "getapk_cli.cli:main"
+
+[project.urls]
+Homepage = "https://rudranetra.com/tools"
+Source = "https://github.com/RansomWhisker/getAPK"
+
+[tool.setuptools]
+packages = ["getapk_cli"]
