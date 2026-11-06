@@ -19,12 +19,23 @@ import zipfile
 from typing import Dict, List, Optional
 
 from . import __version__
+from ._color import colorize, paint
+from . import banner
 
 PKG_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]*(\.[A-Za-z0-9_]+)+$")
 SERIAL_RE = re.compile(r"^[A-Za-z0-9._:\-]{1,100}$")
 DEVICE_PATH_RE = re.compile(r"^/[A-Za-z0-9_./=~+@\-]+\.apk$")
 ADB_TIMEOUT = 120
 PULL_TIMEOUT = 900
+
+
+_builtin_print = print
+
+
+def print(*args, **kw):  # noqa: A001  (status lines get colour by prefix; everything else is untouched)
+    if len(args) == 1 and isinstance(args[0], str):
+        args = (colorize(args[0], kw.get("file")),)
+    _builtin_print(*args, **kw)
 
 
 class AdbError(Exception):
@@ -188,15 +199,18 @@ def cmd_list(adb: Adb, a) -> int:
     if a.match:
         pk = [p for p in pk if a.match.lower() in p.lower()]
     if not pk:
-        print("No matching apps.")
+        print(paint("No matching apps.", "yellow"))
         return 1
     for i, p in enumerate(pk, 1):
         v = adb.version(p)
-        print(f"{i:3}. {p:<55} {v['name'] or '?':<14} {v['installer'] or ''}")
+        print(f"{paint(f'{i:3}.', 'cyan')} {paint(f'{p:<55}', 'bold')} {v['name'] or '?':<14} {paint(v['installer'] or '', 'dim')}")
     return 0
 
 
 def main(argv: Optional[List[str]] = None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    banner.show("getAPK", __version__, "https://github.com/RansomWhisker/getAPK",
+                "pull installed apps from an Android device", suppress=banner.strip_flag(argv))
     for s in (sys.stdout, sys.stderr):
         try:
             s.reconfigure(encoding="utf-8", errors="replace")
@@ -233,8 +247,9 @@ def main(argv: Optional[List[str]] = None):
             try:
                 r = pull_app(adb, p, a.out, a.format)
                 kind = f"{r['splits']} splits" if r["splits"] > 1 else "single APK"
-                print(f"[+] {r['package']} {r['version'] or ''} -> {r['path']}  ({kind}, {fmt_size(r['size'])})")
-                print(f"    sha256 {r['sha256']}")
+                print(f"{paint('[+]', 'green')} {paint(r['package'], 'bold')} {r['version'] or ''} -> {paint(r['path'], 'cyan')}  "
+                      f"({paint(kind, 'dim')}, {fmt_size(r['size'])})")
+                _builtin_print(paint(f"    sha256 {r['sha256']}", "dim"))
             except AdbError as e:
                 failures += 1
                 print(f"[-] {p}: {e}", file=sys.stderr)

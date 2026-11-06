@@ -41,6 +41,10 @@ Single-APK apps are written as `<package>-<version>.apk`; split apps as `<packag
 
 Only use getapk on devices and apps you own or are authorised to analyse. Apps may be copyrighted; extraction is for your own security analysis.
 
+## Banner and colour
+
+On a terminal each run starts with a short logo, the version and links. It goes to stderr, so piped output and `--json` stay clean. Hide it with `--no-banner` or `NO_BANNER=1`; `NO_COLOR=1` turns colour off and `NO_ANIM=1` skips the animation.
+
 ## Tests
 
     python -m unittest discover -s tests -t .
